@@ -20,6 +20,7 @@ android {
 dependencies {
     compile 'com.android.support:appcompat-v7:23.1.0'
     compile 'com.facebook.react:react-native:+'
-    compile 'com.google.android.gms:play-services-ads:+'
+    compile 'com.google.android.gms:play-services-ads:15.0.1'
+    implementation 'com.android.installreferrer:installreferrer:1.0'
     compile fileTree(include: ['*.jar'], dir: 'libs')
 }

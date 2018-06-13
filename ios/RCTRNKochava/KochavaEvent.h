@@ -3,12 +3,12 @@
 //  KochavaTracker
 //
 //  Created by John Bushnell on 9/13/16.
-//  Copyright © 2017 Kochava, Inc. All rights reserved.
+//  Copyright © 2017 - 2018 Kochava, Inc. All rights reserved.
 //
 
 
 
-#if REVEAL_TARGET == 1
+#if WHTLBL_REVEAL_TARGET == 1
 
 #warning KochavaEvent.h: libKochavaTrackeriOS
 
@@ -20,37 +20,53 @@
 
 
 
-#define TRKWLEventTypeEnum TRKWL_CLASS(EventTypeEnum)
+#define WHTLBLEventTypeEnum WHTLBL_CLASS(EventTypeEnum)
 
-#define TRKWLEventTypeEnumUndefined TRKWL_CLASS(EventTypeEnumUndefined)
+#define WHTLBLEventTypeEnumUndefined WHTLBL_CLASS(EventTypeEnumUndefined)
 
-#define TRKWLEventTypeEnumAddToCart TRKWL_CLASS(EventTypeEnumAddToCart)
+#define WHTLBLEventTypeEnumAddToCart WHTLBL_CLASS(EventTypeEnumAddToCart)
 
-#define TRKWLEventTypeEnumAddToWishList TRKWL_CLASS(EventTypeEnumAddToWishList)
+#define WHTLBLEventTypeEnumAddToWishList WHTLBL_CLASS(EventTypeEnumAddToWishList)
 
-#define TRKWLEventTypeEnumAchievement TRKWL_CLASS(EventTypeEnumAchievement)
+#define WHTLBLEventTypeEnumAchievement WHTLBL_CLASS(EventTypeEnumAchievement)
 
-#define TRKWLEventTypeEnumCheckoutStart TRKWL_CLASS(EventTypeEnumCheckoutStart)
+#define WHTLBLEventTypeEnumCheckoutStart WHTLBL_CLASS(EventTypeEnumCheckoutStart)
 
-#define TRKWLEventTypeEnumCustom TRKWL_CLASS(EventTypeEnumCustom)
+#define WHTLBLEventTypeEnumCustom WHTLBL_CLASS(EventTypeEnumCustom)
 
-#define TRKWLEventTypeEnumLevelComplete TRKWL_CLASS(EventTypeEnumLevelComplete)
+#define WHTLBLEventTypeEnumLevelComplete WHTLBL_CLASS(EventTypeEnumLevelComplete)
 
-#define TRKWLEventTypeEnumPurchase TRKWL_CLASS(EventTypeEnumPurchase)
+#define WHTLBLEventTypeEnumPurchase WHTLBL_CLASS(EventTypeEnumPurchase)
 
-#define TRKWLEventTypeEnumRating TRKWL_CLASS(EventTypeEnumRating)
+#define WHTLBLEventTypeEnumRating WHTLBL_CLASS(EventTypeEnumRating)
 
-#define TRKWLEventTypeEnumRegistrationComplete TRKWL_CLASS(EventTypeEnumRegistrationComplete)
+#define WHTLBLEventTypeEnumRegistrationComplete WHTLBL_CLASS(EventTypeEnumRegistrationComplete)
 
-#define TRKWLEventTypeEnumSearch TRKWL_CLASS(EventTypeEnumSearch)
+#define WHTLBLEventTypeEnumSearch WHTLBL_CLASS(EventTypeEnumSearch)
 
-#define TRKWLEventTypeEnumTutorialComplete TRKWL_CLASS(EventTypeEnumTutorialComplete)
+#define WHTLBLEventTypeEnumTutorialComplete WHTLBL_CLASS(EventTypeEnumTutorialComplete)
 
-#define TRKWLEventTypeEnumView TRKWL_CLASS(EventTypeEnumView)
+#define WHTLBLEventTypeEnumView WHTLBL_CLASS(EventTypeEnumView)
+
+#define WHTLBLEventTypeEnumAdView WHTLBL_CLASS(EventTypeEnumAdView)
+
+#define WHTLBLEventTypeEnumPushReceived WHTLBL_CLASS(EventTypeEnumPushReceived)
+
+#define WHTLBLEventTypeEnumPushOpened WHTLBL_CLASS(EventTypeEnumPushOpened)
+
+#define WHTLBLEventTypeEnumConsentGranted WHTLBL_CLASS(EventTypeEnumConsentGranted)
 
 
 
-#define TRKWLEvent TRKWL_CLASS(Event)
+#define WHTLBLEvent WHTLBL_CLASS(Event)
+
+
+
+#pragma mark - CLASS
+
+
+
+@class KVAConsent;
 
 
 
@@ -63,13 +79,13 @@
  
  @brief A class that stores standardized parameters for an event.
  
- @discussion This class is used to store and pass standardized parameters when sending a post-install event to the server.  The proper use of this class is to instantiate an object using the designated initializer, and then to assign values to each property that you wish to send.  You may then pass this object as a parameter to sendEvent.
+ @discussion This class is used to store and pass standardized parameters when sending an event to the server.  The proper use of this class is to instantiate an object using the designated initializer, and then to assign values to each property that you wish to send.  You may then pass this object as a parameter to sendEvent.
  
  Inherits from: NSObject
  
  @author John Bushnell
  
- @copyright 2017 Kochava, Inc.
+ @copyright 2017 - 2018 Kochava, Inc.
  */
 @interface KochavaEvent : NSObject
 
@@ -196,6 +212,42 @@ typedef NS_ENUM(NSUInteger, KochavaEventTypeEnum)
      @discussion This is an enumerated value which signifies that an item was viewed.  You may use this in any equivalent circumstance.
      */
     KochavaEventTypeEnumView = 110,
+    
+    
+    
+    /*!
+     @brief Ad View
+     
+     @discussion This is an enumerated value which signifies that an ad was viewed.  You may use this in any equivalent circumstance.
+     */
+    KochavaEventTypeEnumAdView = 111,
+    
+    
+    
+    /*!
+     @brief Push Received
+     
+     @discussion This is an enumerated value which signifies that a push notification was received.
+     */
+    KochavaEventTypeEnumPushReceived = 112,
+    
+    
+    
+    /*!
+     @brief Push Opened
+     
+     @discussion This is an enumerated value which signifies that a push notification was opened.
+     */
+    KochavaEventTypeEnumPushOpened = 113,
+
+    
+    
+    /*!
+     @brief Consent Granted
+     
+     @discussion This is an enumerated value which signifies that consent was granted.
+     */
+    KochavaEventTypeEnumConsentGranted = 114,
 };
 
 
@@ -205,13 +257,165 @@ typedef NS_ENUM(NSUInteger, KochavaEventTypeEnum)
 
 
 /*!
+ @property actionString
+ 
+ @brief A property containing an action string.
+ 
+ @discussion This field has a somewhat generic quality, in that it can contain whatever you consider to be fitting value.
+ */
+@property (strong, nonatomic, nullable) NSString *actionString;
+
+
+
+/*!
+ @property adCampaignIdString
+ 
+ @brief A property containing an ad campaign identifier string.
+ 
+ @discussion This is expected to contain a string corresponding to an ad campaign identifier.
+ */
+@property (strong, nonatomic, nullable) NSString *adCampaignIdString;
+
+
+
+/*!
+ @property adCampaignNameString
+ 
+ @brief A property containing an ad campaign name string.
+ 
+ @discussion This is expected to contain a string corresponding to an ad campaign name.
+ */
+@property (strong, nonatomic, nullable) NSString *adCampaignNameString;
+
+
+
+/*!
+ @property adDeviceTypeString
+ 
+ @brief A property containing an ad device type string.
+ 
+ @discussion This is expected to contain a string corresponding to a device type.
+ */
+@property (strong, nonatomic, nullable) NSString *adDeviceTypeString;
+
+
+
+/*!
+ @property adGroupIdString
+ 
+ @brief A property containing an ad group identifier string.
+ 
+ @discussion This is expected to contain a string corresponding to an ad group identifier.
+ */
+@property (strong, nonatomic, nullable) NSString *adGroupIdString;
+
+
+
+/*!
+ @property adGroupNameString
+ 
+ @brief A property containing an ad group name string.
+ 
+ @discussion This is expected to contain a string corresponding to an ad group name.
+ */
+@property (strong, nonatomic, nullable) NSString *adGroupNameString;
+
+
+
+/*!
+ @property adMediationNameString
+ 
+ @brief A property containing an ad mediation network name string.
+ 
+ @discussion This is expected to contain a standardized string corresponding to an advertising network.  It is the name of the network that was used during mediation.
+ */
+@property (strong, nonatomic, nullable) NSString *adMediationNameString;
+
+
+
+/*!
+ @property adNetworkNameString
+ 
+ @brief A property containing an ad network name string.
+ 
+ @discussion This is expected to contain a standardized string corresponding to an advertising network.
+ */
+@property (strong, nonatomic, nullable) NSString *adNetworkNameString;
+
+
+
+/*!
+ @property adPlacementString
+ 
+ @brief A property containing an ad placement string.
+ 
+ @discussion This is expected to contain a string corresponding to an ad placement, ad unit, etc.
+ */
+@property (strong, nonatomic, nullable) NSString *adPlacementString;
+
+
+
+/*!
+ @property adSizeString
+ 
+ @brief A property containing an ad size string.
+ 
+ @discussion This is expected to contain a string corresponding to an ad size.
+ */
+@property (strong, nonatomic, nullable) NSString *adSizeString;
+
+
+
+/*!
+ @property adTypeString
+ 
+ @brief A property containing an ad type string.
+ 
+ @discussion This is expected to contain a string corresponding to an ad type.
+ */
+@property (strong, nonatomic, nullable) NSString *adTypeString;
+
+
+
+/*!
+ @property appleWatchBool
+ 
+ @brief A boolean indicating that this event originated from an Apple Watch.
+ */
+@property BOOL appleWatchBool;
+
+
+
+/*!
+ @property appleWatchIdString
+ 
+ @brief A string containing a unique identifer associated with the Apple Watch from which this event originated.
+ 
+ @discussion Optional.  You may set this property in addition to appleWatchBool if you have a unique identifier associated with the watch.
+ */
+@property (strong, nonatomic, nullable) NSString *appleWatchIdString;
+
+
+
+/*!
  @property appStoreReceiptBase64EncodedString
  
  @brief A property containing an App Store receipt which has been converted into a base64 encoded string.
  
- @discussion This payload is expected to contain an App Store receipt, which also would contain the host's in-app purchase receipts.   The format of the information is expected to be that which is provided by the main bundle's appStoreReceiptURL method, the data of which being loaded and base-64-string-encoded.   It is expected that this information would be provided (or re-provided) at the time a new in-app purchase has been made, with the expectation that it would be validated.
+ @discussion The format of the information is expected to be that which is provided by the main bundle's appStoreReceiptURL method, the data of which being loaded and base-64-string-encoded.
  */
 @property (strong, nonatomic, nullable) NSString *appStoreReceiptBase64EncodedString;
+
+
+
+/*!
+ @property backgroundBoolNumber
+ 
+ @brief A property containing a boolean wrapped in an NSNumber which indicates that something is background.
+ 
+ @discussion This is expected to contain a boolean which indicates if something is background, or occurred while in the background.  This field has a somewhat generic quality, in that it can contain whatever you consider to be fitting value.
+ */
+@property (strong, nonatomic, nullable) NSNumber *backgroundBoolNumber;
 
 
 
@@ -223,6 +427,37 @@ typedef NS_ENUM(NSUInteger, KochavaEventTypeEnum)
  @discussion This is generally taken to be a boolean, but it is passed as a string so that you can provide more than two states.  Suggested values are "true" and "false", but can also be values such as "yes", "no", or "partial".
  */
 @property (strong, nonatomic, nullable) NSString *checkoutAsGuestString;
+
+
+
+/*!
+ @property completedBoolNumber
+ 
+ @brief A property containing a boolean wrapped in an NSNumber which indicates that something is completed.
+ 
+ @discussion This is expected to contain a boolean which indicates if something is completed.  This field has a somewhat generic quality, in that it can contain whatever you consider to be fitting value.
+ */
+@property (strong, nonatomic, nullable) NSNumber *completedBoolNumber;
+
+
+
+/*!
+ @property consent
+ 
+ @brief An instance of KVAConsent.
+ */
+@property (strong, nonatomic, nullable) KVAConsent *consent;
+
+
+
+/*!
+ @property consentRequiredBool
+ 
+ @brief A property which is a boolean indicating if consent is required for the event.
+ 
+ @discussion The default is NO.  If you want to send an event passing information which requires consent to be kept, persisted, or shared, you may indicate that using this property.  The associated information will only be calculated, kept, persisted, or shared, if that activities may take place as determined by consent.
+ */
+@property BOOL consentRequiredBool;
 
 
 
@@ -348,6 +583,17 @@ typedef NS_ENUM(NSUInteger, KochavaEventTypeEnum)
 
 
 /*!
+ @property eventTypeEnum
+ 
+ @brief An event type.
+ 
+ @discussion Readonly.  This value may be set when an event is constucted.
+ */
+@property (readonly) KochavaEventTypeEnum eventTypeEnum;
+
+
+
+/*!
  @property infoDictionary
  
  @brief A property containing an informational dictionary of key/value pairs.
@@ -440,11 +686,33 @@ typedef NS_ENUM(NSUInteger, KochavaEventTypeEnum)
 
 
 /*!
+ @property payloadDictionary
+ 
+ @brief A property that contains a payload in the form of a dictionary.
+ 
+ @discussion This field has a somewhat generic quality, in that it can contain whatever you consider to be fitting value.
+ */
+@property (strong, nonatomic, nullable) NSDictionary *payloadDictionary;
+
+
+
+/*!
+ @property priceDecimalNumber
+ 
+ @brief A property that contains a price.
+ 
+ @discussion This field has a somewhat generic quality, in that it can contain whatever you consider to be fitting value.  Because it uses an NSDecimalNumber, it is better suited for preserving decimal precision than priceDoubleNumber.  priceDecimalNumber and priceDoubleNumber share the same key when sent to the server.  If both are set, the value within priceDecimalNumber will win.
+ */
+@property (strong, nonatomic, nullable) NSDecimalNumber *priceDecimalNumber;
+
+
+
+/*!
  @property priceDoubleNumber
  
  @brief A property that contains a price.  It is a double that is wrapped in an NSNumber.
  
- @discussion This field has a somewhat generic quality, in that it can contain whatever you consider to be fitting value.
+ @discussion This field has a somewhat generic quality, in that it can contain whatever you consider to be fitting value.  In order to better preserve decimal precision, see priceDecimalNumber.  priceDecimalNumber and priceDoubleNumber share the same key when sent to the server.  If both are set, the value within priceDecimalNumber will win.
  */
 @property (strong, nonatomic, nullable) NSNumber *priceDoubleNumber;
 
@@ -637,51 +905,29 @@ typedef NS_ENUM(NSUInteger, KochavaEventTypeEnum)
 
 
 
-#pragma mark - PROPERTIES
+#pragma mark - GENERAL
 
 
 
 /*!
- @property - standardBool
+ @method - eventNameString
  
- @brief Indicates if the event only contained standardized parameters.
+ @brief A method that returns a string representation of the name of the event.
  */
-@property (readonly) BOOL standardBool;
-
-
-
-#pragma mark - METHODS
+- (nonnull NSString *)eventNameString;
 
 
 
 /*!
- @method - serverEventActionString
- 
- @brief A method that returns the event action which is suitable to send to the server (internal).
- */
-- (nonnull NSString *)serverEventActionString;
-
-
-
-/*!
- @method - serverEventNameString
- 
- @brief A method that returns the event name which is suitable to send to the server (internal).
- */
-- (nonnull NSString *)serverEventNameString;
-
-
-
-/*!
- @method - serverEventInfoObject
+ @method - eventInfoObject
  
  @brief A method that returns an info object which is suitable to send to the server (internal).
  */
-- (nullable NSObject *)serverEventInfoObject;
+- (nullable NSObject *)eventInfoObject;
 
 
 
-#pragma mark - CLASS METHODS
+#pragma mark - CLASS GENERAL
 
 
 
